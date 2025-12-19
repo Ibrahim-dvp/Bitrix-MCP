@@ -2,12 +2,10 @@
  * Lead CRUD Tools
  */
 
-import { leadAPI } from ../lib/bitrix-api.js.js';
-import { STANDARD_FIELDS } // from constants.js';
-
+import { leadAPI } from '../lib/bitrix-api.js';
 import type { ToolDefinition } from '../types/index.js';
 
-const FIELDS = []; // Will be added
+const FIELDS = ['ID', 'TITLE', 'NAME', 'LAST_NAME', 'STATUS_ID', 'OPPORTUNITY'];
 
 export const leadTools: ToolDefinition[] = [
   {
@@ -40,7 +38,7 @@ export const leadTools: ToolDefinition[] = [
       const { select, filter = {}, order = { ID: 'DESC' }, start = 0, limit = 50 } = params;
 
       const result = await leadAPI.list({
-        select: select || STANDARD_FIELDS.lead,
+        select: select || FIELDS,
         filter,
         order,
         start
@@ -143,7 +141,7 @@ export const leadTools: ToolDefinition[] = [
       required: ['title']
     },
     handler: async (params) => {
-      const bitrixFields = {};
+      const bitrixFields: Record<string, any> = {};
       for (const [key, value] of Object.entries(params)) {
         const upperKey = key.toUpperCase();
         bitrixFields[upperKey] = value;
@@ -179,7 +177,7 @@ export const leadTools: ToolDefinition[] = [
     handler: async (params) => {
       const { id, ...fields } = params;
 
-      const bitrixFields = {};
+      const bitrixFields: Record<string, any> = {};
       for (const [key, value] of Object.entries(fields)) {
         const upperKey = key.toUpperCase();
         bitrixFields[upperKey] = value;

@@ -2,12 +2,10 @@
  * Deal CRUD Tools
  */
 
-import { dealAPI } from ../lib/bitrix-api.js.js';
-import { STANDARD_FIELDS } // from constants.js';
-
+import { dealAPI } from '../lib/bitrix-api.js';
 import type { ToolDefinition } from '../types/index.js';
 
-const FIELDS = []; // Will be added
+const FIELDS = ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'COMPANY_ID', 'CURRENCY_ID'];
 
 export const dealTools: ToolDefinition[] = [
   {
@@ -40,7 +38,7 @@ export const dealTools: ToolDefinition[] = [
       const { select, filter = {}, order = { ID: 'DESC' }, start = 0, limit = 50 } = params;
 
       const result = await dealAPI.list({
-        select: select || STANDARD_FIELDS.deal,
+        select: select || FIELDS,
         filter,
         order,
         start
@@ -143,7 +141,7 @@ export const dealTools: ToolDefinition[] = [
       required: ['title']
     },
     handler: async (params) => {
-      const bitrixFields = {};
+      const bitrixFields: Record<string, any> = {};
       for (const [key, value] of Object.entries(params)) {
         const upperKey = key.toUpperCase();
         bitrixFields[upperKey] = value;
@@ -180,7 +178,7 @@ export const dealTools: ToolDefinition[] = [
     handler: async (params) => {
       const { id, ...fields } = params;
 
-      const bitrixFields = {};
+      const bitrixFields: Record<string, any> = {};
       for (const [key, value] of Object.entries(fields)) {
         const upperKey = key.toUpperCase();
         bitrixFields[upperKey] = value;
