@@ -1,0 +1,121 @@
+### MCP Streamable HTTP v1 Protocol Tests
+### Official MCP endpoints for Open WebUI
+
+@baseUrl = https://bitrix-mcp-production.up.railway.app
+
+### 1. Health Check (Legacy endpoint - should still work)
+GET {{baseUrl}}/health
+
+### 2. Root Documentation
+GET {{baseUrl}}/
+
+### 3. MCP v1: Initialize Connection
+POST {{baseUrl}}/mcp/v1/initialize
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2024-11-05",
+    "clientInfo": {
+      "name": "open-webui",
+      "version": "0.6.31"
+    }
+  }
+}
+
+### 4. MCP v1: List All Tools
+POST {{baseUrl}}/mcp/v1/tools/list
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/list",
+  "params": {}
+}
+
+### 5. MCP v1: Call Tool - Search Companies
+POST {{baseUrl}}/mcp/v1/tools/call
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "bitrix_company_search",
+    "arguments": {
+      "query": "Atoma",
+      "limit": 5
+    }
+  }
+}
+
+### 6. MCP v1: Call Tool - List Companies
+POST {{baseUrl}}/mcp/v1/tools/call
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "tools/call",
+  "params": {
+    "name": "bitrix_company_list",
+    "arguments": {
+      "limit": 10
+    }
+  }
+}
+
+### 7. MCP v1: Call Tool - Search Contacts
+POST {{baseUrl}}/mcp/v1/tools/call
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "tools/call",
+  "params": {
+    "name": "bitrix_contact_search",
+    "arguments": {
+      "query": "Barbara",
+      "limit": 5
+    }
+  }
+}
+
+### 8. MCP v1: Call Tool - Get Fields
+POST {{baseUrl}}/mcp/v1/tools/call
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 6,
+  "method": "tools/call",
+  "params": {
+    "name": "bitrix_fields_get",
+    "arguments": {
+      "entity": "company"
+    }
+  }
+}
+
+### 9. MCP v1: Call Non-Existent Tool (Error Test)
+POST {{baseUrl}}/mcp/v1/tools/call
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 7,
+  "method": "tools/call",
+  "params": {
+    "name": "nonexistent_tool",
+    "arguments": {}
+  }
+}
+
+### 10. SSE Stream Endpoint
+GET {{baseUrl}}/mcp/sse

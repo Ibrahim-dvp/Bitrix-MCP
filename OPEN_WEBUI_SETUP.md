@@ -1,61 +1,51 @@
 # Open WebUI Configuration Guide
 
-## Your MCP Server Details
+## ✅ MCP Server Ready
 
 **Railway URL:** `https://bitrix-mcp-production.up.railway.app`
 
-**Available Endpoints:**
-- Health Check: `/health`
-- List Tools: `/mcp/tools`
-- Execute Tool: `/mcp/tools/{tool_name}`
+**Protocol:** MCP Streamable HTTP v1 (Official Standard)
 
-## Step-by-Step Setup in Open WebUI
+**MCP v1 Endpoints:**
+- Initialize: `POST /mcp/v1/initialize`
+- List Tools: `POST /mcp/v1/tools/list`
+- Call Tool: `POST /mcp/v1/tools/call`
+- SSE Stream: `GET /mcp/sse`
 
-### Method 1: Function/Tool Configuration (Recommended)
+## Step-by-Step Setup in Open WebUI v0.6.31+
+
+### Official MCP Integration (Recommended)
 
 1. **Open Open WebUI** in your browser
-2. Go to **Settings** (gear icon) or **Admin Panel**
-3. Look for **"Functions"**, **"Tools"**, or **"External Tools"** section
-4. Click **"Add Function"** or **"Add Tool"**
+2. Go to **Admin Settings** (or **Settings** if admin)
+3. Navigate to **External Tools** section
+4. Click **"+ Add Server"**
 5. Configure as follows:
 
-**Configuration:**
-```json
-{
-  "name": "Bitrix24 CRM",
-  "type": "http",
-  "url": "https://bitrix-mcp-production.up.railway.app",
-  "endpoints": {
-    "list": "/mcp/tools",
-    "execute": "/mcp/tools/"
-  }
-}
-```
+**Required Settings:**
+- **Type:** `MCP (Streamable HTTP)` ⚠️ Important: Must select this type!
+- **Server URL:** `https://bitrix-mcp-production.up.railway.app`
+- **Authentication:** None (or leave empty)
+- **Name:** Bitrix24 CRM (optional, for display)
 
-### Method 2: OpenAPI/MCP Integration
+6. Click **Save** or **Add**
 
-If Open WebUI has MCP support:
+7. Open WebUI will automatically:
+   - Call `/mcp/v1/initialize` to establish connection
+   - Call `/mcp/v1/tools/list` to discover all 32 tools
+   - Make tools available to the AI
 
-1. Go to **Settings** → **MCP Servers** or **Integrations**
-2. Click **"Add MCP Server"**
-3. Enter:
-   - **Name:** Bitrix24 CRM
-   - **URL:** `https://bitrix-mcp-production.up.railway.app`
-   - **Type:** HTTP/SSE
-   - **Transport:** HTTP
+### Verification
 
-### Method 3: Manual API Configuration
+After adding the server, Open WebUI should show:
+- ✅ Connection: Active/Connected
+- ✅ Tools Available: 32
+- ✅ Status: Online
 
-If Open WebUI allows custom API endpoints:
-
-```yaml
-Name: Bitrix24 CRM Tools
-Base URL: https://bitrix-mcp-production.up.railway.app
-Authentication: None
-Endpoints:
-  - GET /mcp/tools (list available tools)
-  - POST /mcp/tools/{tool_name} (execute tool)
-```
+If you see errors, check:
+1. Railway deployment is online (green status)
+2. Server URL is exactly: `https://bitrix-mcp-production.up.railway.app`
+3. Type is set to **"MCP (Streamable HTTP)"** not generic HTTP
 
 ## Testing the Integration
 

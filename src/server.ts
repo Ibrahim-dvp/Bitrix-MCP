@@ -5,9 +5,11 @@
 
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { serverConfig } from './config/index.js';
 import { allTools } from './tools/index.js';
 import { BitrixAPIError } from './lib/bitrix-api.js';
+import { openApiSpec } from './openapi-spec.js';
 
 const app = express();
 
@@ -122,6 +124,107 @@ app.post('/mcp/v1/tools/call', async (req: Request, res: Response) => {
         data: errorDetails,
       },
     });
+  }
+});
+
+// ============================================================================
+// OPENAPI ENDPOINTS (For Open WebUI OpenAPI integration)
+// ============================================================================
+
+// Swagger UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
+
+// OpenAPI JSON spec
+app.get('/openapi.json', (_req: Request, res: Response) => {
+  res.json(openApiSpec);
+});
+
+// REST API endpoints that map to MCP tools
+app.post('/api/company/search', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_search');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/company/list', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_list');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/company/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/contact/search', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_search');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/contact/list', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_list');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/lead/search', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_search');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/deal/search', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_search');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/invoice/search', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_search');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
   }
 });
 
