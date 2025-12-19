@@ -1,5 +1,6 @@
 /**
- * HTTP/SSE MCP Server for Open WebUI
+ * MCP Streamable HTTP Server for Open WebUI
+ * Implements official MCP protocol v1
  */
 
 import express, { Request, Response } from 'express';
@@ -23,9 +24,110 @@ app.get('/health', (_req: Request, res: Response) => {
     status: 'healthy',
     service: 'bitrix-mcp-server',
     version: '1.0.0',
+    protocol: 'MCP Streamable HTTP',
     timestamp: new Date().toISOString(),
   });
 });
+
+// ============================================================================
+// MCP PROTOCOL V1 ENDPOINTS (Official Standard)
+// ============================================================================
+
+// MCP v1: Initialize
+app.post('/mcp/v1/initialize', (req: Request, res: Response) => {
+  res.json({
+    jsonrpc: '2.0',
+    id: req.body.id || 1,
+    result: {
+      protocolVersion: '2024-11-05',
+      serverInfo: {
+        name: 'bitrix-mcp-server',
+        version: '1.0.0',
+      },
+      capabilities: {
+        tools: {
+          listChanged: false,
+        },
+      },
+    },
+  });
+});
+
+// MCP v1: List Tools
+app.post('/mcp/v1/tools/list', (req: Request, res: Response) => {
+  const tools = allTools.map((tool) => ({
+    name: tool.name,
+    description: tool.description,
+    inputSchema: tool.inputSchema,
+  }));
+
+  res.json({
+    jsonrpc: '2.0',
+    id: req.body.id || 1,
+    result: {
+      tools,
+    },
+  });
+});
+
+// MCP v1: Call Tool
+app.post('/mcp/v1/tools/call', async (req: Request, res: Response) => {
+  const { name: toolName, arguments: args } = req.body.params || {};
+  const requestId = req.body.id || 1;
+
+  try {
+    const tool = allTools.find((t) => t.name === toolName);
+
+    if (!tool) {
+      return res.json({
+        jsonrpc: '2.0',
+        id: requestId,
+        error: {
+          code: -32602,
+          message: `Tool not found: ${toolName}`,
+        },
+      });
+    }
+
+    const result = await tool.handler(args || {});
+
+    return res.json({
+      jsonrpc: '2.0',
+      id: requestId,
+      result: {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      },
+    });
+  } catch (error) {
+    console.error(`Error executing tool ${toolName}:`, error);
+
+    let errorMessage = (error as Error).message;
+    let errorDetails = {};
+
+    if (error instanceof BitrixAPIError) {
+      errorDetails = error.details;
+    }
+
+    return res.json({
+      jsonrpc: '2.0',
+      id: requestId,
+      error: {
+        code: -32603,
+        message: errorMessage,
+        data: errorDetails,
+      },
+    });
+  }
+});
+
+// ============================================================================
+// LEGACY ENDPOINTS (For backwards compatibility with test-api.http)
+// ============================================================================
 
 // MCP: List tools
 app.get('/mcp/tools', (_req: Request, res: Response) => {
@@ -105,15 +207,23 @@ app.get('/', (_req: Request, res: Response) => {
   res.json({
     service: 'Bitrix24 MCP Server',
     version: '1.0.0',
+    protocol: 'MCP Streamable HTTP',
     description: 'Model Context Protocol server for Bitrix24 CRM - Open WebUI compatible',
     endpoints: {
-      health: 'GET /health - Health check',
-      tools: 'GET /mcp/tools - List available tools',
-      execute: 'POST /mcp/tools/:toolName - Execute a tool',
-      sse: 'GET /mcp/sse - Server-Sent Events stream',
+      mcp_v1: {
+        initialize: 'POST /mcp/v1/initialize - Initialize MCP connection',
+        listTools: 'POST /mcp/v1/tools/list - List available tools',
+        callTool: 'POST /mcp/v1/tools/call - Execute a tool',
+      },
+      legacy: {
+        health: 'GET /health - Health check',
+        tools: 'GET /mcp/tools - List tools (legacy)',
+        execute: 'POST /mcp/tools/:toolName - Execute tool (legacy)',
+        sse: 'GET /mcp/sse - SSE stream',
+      },
     },
     toolsCount: allTools.length,
-    documentation: 'https://github.com/your-repo/bitrix-mcp-server',
+    documentation: 'https://github.com/Ibrahim-dvp/Bitrix-MCP',
   });
 });
 
@@ -124,15 +234,22 @@ export function startServer(): void {
     console.log(`
 ╔═══════════════════════════════════════════════════╗
 ║   Bitrix24 MCP Server - Running                  ║
+║   Protocol: MCP Streamable HTTP v1               ║
 ╚═══════════════════════════════════════════════════╝
 
-Server:    http://localhost:${port}
-Health:    http://localhost:${port}/health
-Tools:     http://localhost:${port}/mcp/tools
-SSE:       http://localhost:${port}/mcp/sse
+Server:         http://localhost:${port}
+Health:         http://localhost:${port}/health
 
-Environment: ${serverConfig.nodeEnv}
-Tools:       ${allTools.length} available
+MCP v1 Endpoints (Official):
+  Initialize:   POST /mcp/v1/initialize
+  List Tools:   POST /mcp/v1/tools/list
+  Call Tool:    POST /mcp/v1/tools/call
+  SSE Stream:   GET  /mcp/sse
+
+Environment:    ${serverConfig.nodeEnv}
+Tools:          ${allTools.length} available
+
+Ready for Open WebUI integration!
     `);
   });
 }

@@ -1,0 +1,113 @@
+### Bitrix MCP Server API Tests
+### Replace the URL with your Railway deployment URL if different
+
+@baseUrl = https://bitrix-mcp-production.up.railway.app
+
+### 1. Health Check
+GET {{baseUrl}}/health
+
+### 2. List All Tools (32 tools)
+GET {{baseUrl}}/mcp/tools
+
+### 3. Search Companies by Name
+POST {{baseUrl}}/mcp/tools/bitrix_company_search
+Content-Type: application/json
+
+{
+  "query": "Atoma",
+  "limit": 5
+}
+
+### 4. List Companies
+POST {{baseUrl}}/mcp/tools/bitrix_company_list
+Content-Type: application/json
+
+{
+  "limit": 10
+}
+
+### 5. Get Specific Company (replace 123 with real ID)
+POST {{baseUrl}}/mcp/tools/bitrix_company_get
+Content-Type: application/json
+
+{
+  "id": 123
+}
+
+### 6. Search Contacts
+POST {{baseUrl}}/mcp/tools/bitrix_contact_search
+Content-Type: application/json
+
+{
+  "query": "Barbara",
+  "limit": 5
+}
+
+### 7. List Contacts
+POST {{baseUrl}}/mcp/tools/bitrix_contact_list
+Content-Type: application/json
+
+{
+  "limit": 10
+}
+
+### 8. Search Leads
+POST {{baseUrl}}/mcp/tools/bitrix_lead_search
+Content-Type: application/json
+
+{
+  "query": "New",
+  "limit": 5
+}
+
+### 9. List Deals
+POST {{baseUrl}}/mcp/tools/bitrix_deal_list
+Content-Type: application/json
+
+{
+  "limit": 10
+}
+
+### 10. Search Invoices
+POST {{baseUrl}}/mcp/tools/bitrix_invoice_search
+Content-Type: application/json
+
+{
+  "query": "2024",
+  "limit": 5
+}
+
+### 11. List Invoices
+POST {{baseUrl}}/mcp/tools/bitrix_invoice_list
+Content-Type: application/json
+
+{
+  "limit": 10
+}
+
+### 12. Get Available Fields for Company
+POST {{baseUrl}}/mcp/tools/bitrix_fields_get
+Content-Type: application/json
+
+{
+  "entity": "company"
+}
+
+### 13. Get Available Fields for Invoice
+POST {{baseUrl}}/mcp/tools/bitrix_fields_get
+Content-Type: application/json
+
+{
+  "entity": "invoice"
+}
+
+### 14. Create Test Company (CAUTION: This will create real data!)
+# POST {{baseUrl}}/mcp/tools/bitrix_company_create
+# Content-Type: application/json
+#
+# {
+#   "title": "Test Company via MCP",
+#   "company_type": "CUSTOMER",
+#   "phone": "123456789",
+#   "email": "test@example.com"
+# }
