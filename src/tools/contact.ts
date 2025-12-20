@@ -119,9 +119,9 @@ export const contactTools: ToolDefinition[] = [
 					"COMPANY_TITLE",
 				],
 				filter: {
-					"%NAME": query,
-					"%LAST_NAME": query,
 					LOGIC: "OR",
+					0: { "%NAME": query },
+					1: { "%LAST_NAME": query },
 				},
 				order: { ID: "DESC" },
 			});

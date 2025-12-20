@@ -1,0 +1,89 @@
+### REST API Tests for Bitrix MCP Server
+### Test all CRUD operations
+
+@baseUrl = https://bitrix-mcp-production.up.railway.app
+
+### 1. Search Contacts by Name "Andrea"
+POST {{baseUrl}}/api/contact/search
+Content-Type: application/json
+
+{
+  "query": "Andrea",
+  "limit": 10
+}
+
+### 2. List All Contacts (first 10)
+POST {{baseUrl}}/api/contact/list
+Content-Type: application/json
+
+{
+  "limit": 10
+}
+
+### 3. Search Companies by Name
+POST {{baseUrl}}/api/company/search
+Content-Type: application/json
+
+{
+  "query": "Atoma",
+  "limit": 5
+}
+
+### 4. Get Specific Contact by ID (replace with real ID from search above)
+GET {{baseUrl}}/api/contact/12345
+
+### 5. Search Leads
+POST {{baseUrl}}/api/lead/search
+Content-Type: application/json
+
+{
+  "query": "test",
+  "limit": 5
+}
+
+### 6. Search Deals
+POST {{baseUrl}}/api/deal/search
+Content-Type: application/json
+
+{
+  "query": "deal",
+  "limit": 5
+}
+
+### 7. Search Invoices
+POST {{baseUrl}}/api/invoice/search
+Content-Type: application/json
+
+{
+  "query": "2024",
+  "limit": 5
+}
+
+### 8. Get Available Fields for Company
+GET {{baseUrl}}/api/fields/company
+
+### 9. Get Available Fields for Contact
+GET {{baseUrl}}/api/fields/contact
+
+### 10. Create Test Contact (CAUTION: Creates real data!)
+# POST {{baseUrl}}/api/contact
+# Content-Type: application/json
+#
+# {
+#   "name": "Test",
+#   "last_name": "User",
+#   "phone": "555-1234",
+#   "email": "test@example.com"
+# }
+
+### 11. Update Contact (CAUTION: Modifies real data!)
+# PUT {{baseUrl}}/api/contact
+# Content-Type: application/json
+#
+# {
+#   "id": 12345,
+#   "phone": "555-9999"
+# }
+
+### 12. Delete Contact (CAUTION: Deletes real data!)
+# DELETE {{baseUrl}}/api/contact/12345
