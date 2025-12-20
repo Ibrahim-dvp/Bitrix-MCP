@@ -228,6 +228,271 @@ app.post('/api/invoice/search', async (req: Request, res: Response) => {
   }
 });
 
+// Additional CRUD operations for all entities
+app.post('/api/company', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_create');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.put('/api/company', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_update');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.delete('/api/company/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_company_delete');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/contact/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/contact', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_create');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.put('/api/contact', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_update');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.delete('/api/contact/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_contact_delete');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/lead/list', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_list');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/lead/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/lead', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_create');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.put('/api/lead', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_update');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.delete('/api/lead/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_lead_delete');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/deal/list', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_list');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/deal/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/deal', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_create');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.put('/api/deal', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_update');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.delete('/api/deal/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_deal_delete');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/invoice/list', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_list');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/invoice/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/invoice', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_create');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.put('/api/invoice', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_update');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler(req.body);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.delete('/api/invoice/:id', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_delete');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id) });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.post('/api/invoice/:id/products', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_invoice_add_products');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ id: parseInt(req.params.id), ...req.body });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+app.get('/api/fields/:entity', async (req: Request, res: Response) => {
+  const tool = allTools.find((t) => t.name === 'bitrix_fields_get');
+  if (!tool) return res.status(404).json({ error: 'Tool not found' });
+  try {
+    const result = await tool.handler({ entity: req.params.entity });
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+});
+
 // ============================================================================
 // LEGACY ENDPOINTS (For backwards compatibility with test-api.http)
 // ============================================================================
